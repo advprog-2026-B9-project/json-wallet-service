@@ -13,58 +13,57 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        # actions/checkout@v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        # actions/setup-java@v4.7.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12
         with:
           java-version: '21'
           distribution: 'temurin'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: wrapper
+        # gradle/actions/setup-gradle@v4.3.0
+        uses: gradle/actions/setup-gradle@cc4fc85e6b35bafd576d0895c6a3b4345d3a9547
 
       - name: Grant execute permission for gradlew
+        working-directory: ./backend
         run: chmod +x gradlew
 
       - name: Run Tests & Linters (Checkstyle & JaCoCo)
+        working-directory: ./backend
         run: ./gradlew check
 
       - name: Upload Test Report
-        uses: actions/upload-artifact@v4
+        # actions/upload-artifact@v4.4.3
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
         if: failure()
         with:
           name: test-reports
-          path: build/reports/tests/test/
+          path: backend/build/reports/tests/test/
 
-      - name: Upload Code Coverage Report (JaCoCo)
-        uses: actions/upload-artifact@v4
+      - name: Upload Code Coverage Report
+        # actions/upload-artifact@v4.4.3
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
         if: always()
         with:
           name: jacoco-coverage-report
-          path: build/reports/jacoco/test/html/
+          path: backend/build/reports/jacoco/test/html/
 
       - name: Cache SonarQube packages
-        uses: actions/cache@v4
+        # actions/cache@v4.2.0
+        uses: actions/cache@1bd1e32a3ceb453115684670140fe0117d1459a8
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Build and analyze
+      - name: Analyze with SonarCloud
+        working-directory: ./backend
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew sonar --info
-
-  # Placeholder untuk Automated Deployment ke AWS
-  # deploy-to-aws:
-  #   needs: build-and-test
-  #   if: github.event_name == 'push' # Hanya deploy saat merge, bukan PR
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Deploy Placeholder
-  #       run: echo "Dummy AWS deployment script"
