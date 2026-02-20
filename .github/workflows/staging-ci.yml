@@ -27,7 +27,7 @@ jobs:
 
       - name: Setup Gradle
         # gradle/actions/setup-gradle@v4.3.0
-        uses: gradle/actions/setup-gradle@cc4fc85e6b35bafd576d0895c6a3b4345d3a9547
+        uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b
 
       - name: Grant execute permission for gradlew
         working-directory: ./backend
@@ -54,8 +54,8 @@ jobs:
           path: backend/build/reports/jacoco/test/html/
 
       - name: Cache SonarQube packages
-        # actions/cache@v4.2.0
-        uses: actions/cache@1bd1e32a3ceb453115684670140fe0117d1459a8
+        # actions/cache@v4.1.1
+        uses: actions/cache@3624ceb22c1c5a301c8db4169662070a689d9ea8
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
