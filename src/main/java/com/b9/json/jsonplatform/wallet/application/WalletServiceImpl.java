@@ -35,6 +35,9 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public void increaseBalance(UUID walletId, BigDecimal amount) {
+        Wallet wallet = getWalletById(walletId);
+        wallet.setBalance(wallet.getBalance().add(amount));
+        walletRepository.save(wallet);
     }
 
     @Override
