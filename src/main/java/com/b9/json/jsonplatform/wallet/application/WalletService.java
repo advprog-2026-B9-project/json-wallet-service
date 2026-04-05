@@ -7,7 +7,8 @@ import java.util.UUID;
 
 public interface WalletService {
     Wallet createWallet(UUID userId);
+    Wallet getWalletById(UUID walletId);
     Wallet getWalletByUserId(UUID userId);
-    Wallet topUp(UUID userId, BigDecimal amount);
-    Wallet withdraw(UUID userId, BigDecimal amount);
+    void increaseBalance(UUID userId, BigDecimal amount);
+    void decreaseBalance(UUID userId, BigDecimal amount);
 }
