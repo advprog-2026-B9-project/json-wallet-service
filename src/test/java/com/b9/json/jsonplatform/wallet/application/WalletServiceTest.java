@@ -14,7 +14,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,115 +25,64 @@ class WalletServiceTest {
     @InjectMocks
     private WalletServiceImpl walletService;
 
-    private UUID userId;
+    private UUID walletId;
     private Wallet wallet;
 
     @BeforeEach
     void setUp() {
-        userId = UUID.randomUUID();
-        wallet = new Wallet(userId);
+        walletId = UUID.randomUUID();
+        wallet = new Wallet(UUID.randomUUID());
+        wallet.setId(walletId);
+        wallet.setBalance(BigDecimal.ZERO);
     }
 
     @Test
-    void testCreateWallet() {
-        when(walletRepository.save(any(Wallet.class))).thenReturn(wallet);
-        Wallet result = walletService.createWallet(userId);
+    void testGetWalletById_Exist() {
+        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+
+        Wallet result = walletService.getWalletById(walletId);
 
         assertNotNull(result);
-        assertEquals(userId, result.getUserId());
-        assertEquals(BigDecimal.ZERO, result.getBalance());
+        assertEquals(walletId, result.getId());
     }
 
     @Test
-    void testGetWalletByUserId_Exist() {
-        when(walletRepository.findByUserId(userId)).thenReturn(Optional.of(wallet));
-        Wallet result = walletService.getWalletByUserId(userId);
+    void testGetWalletById_NotExist() {
+        when(walletRepository.findById(walletId)).thenReturn(Optional.empty());
 
-        assertNotNull(result);
-        assertEquals(userId, result.getUserId());
+        assertThrows(IllegalArgumentException.class,
+                () -> walletService.getWalletById(walletId));
     }
 
     @Test
-    void testGetWalletByUserId_NotExist() {
-        when(walletRepository.findByUserId(userId)).thenReturn(Optional.empty());
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> walletService.getWalletByUserId(userId)
-        );
+    void testIncreaseBalance() {
+        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.save(any())).thenReturn(wallet);
 
-        assertEquals("Wallet not found", exception.getMessage());
+        walletService.increaseBalance(walletId, new BigDecimal("100"));
+
+        assertEquals(new BigDecimal("100"), wallet.getBalance());
     }
 
     @Test
-    void testTopUp_Valid() {
-        BigDecimal amount = new BigDecimal("100.00");
-        when(walletRepository.findByUserId(userId)).thenReturn(Optional.of(wallet));
-        when(walletRepository.save(wallet)).thenReturn(wallet);
-        Wallet result = walletService.topUp(userId, amount);
+    void testDecreaseBalance_Success() {
+        wallet.setBalance(new BigDecimal("200"));
 
-        assertEquals(new BigDecimal("100.00"), result.getBalance());
+        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
+        when(walletRepository.save(any())).thenReturn(wallet);
+
+        walletService.decreaseBalance(walletId, new BigDecimal("50"));
+
+        assertEquals(new BigDecimal("150"), wallet.getBalance());
     }
 
     @Test
-    void testTopUp_Invalid_Zero() {
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> walletService.topUp(userId, BigDecimal.ZERO)
-        );
+    void testDecreaseBalance_Insufficient() {
+        wallet.setBalance(new BigDecimal("50"));
 
-        assertEquals("Amount must be greater than zero", ex.getMessage());
-    }
+        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
 
-    @Test
-    void testTopUp_Invalid_Negative() {
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> walletService.topUp(userId, new BigDecimal("-50.00"))
-        );
-
-        assertEquals("Amount must be greater than zero", exception.getMessage());
-    }
-
-    @Test
-    void testWithdraw_Valid() {
-        wallet.setBalance(new BigDecimal("200.00"));
-        BigDecimal amount = new BigDecimal("75.00");
-        when(walletRepository.findByUserId(userId)).thenReturn(Optional.of(wallet));
-        when(walletRepository.save(wallet)).thenReturn(wallet);
-        Wallet result = walletService.withdraw(userId, amount);
-
-        assertEquals(new BigDecimal("125.00"), result.getBalance());
-    }
-
-    @Test
-    void testWithdraw_Invalid_Zero() {
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> walletService.withdraw(userId, BigDecimal.ZERO)
-        );
-
-        assertEquals("Amount must be greater than zero", exception.getMessage());
-    }
-
-    @Test
-    void testWithdraw_Invalid_Negative() {
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> walletService.withdraw(userId, new BigDecimal("-10.00"))
-        );
-
-        assertEquals("Amount must be greater than zero", ex.getMessage());
-    }
-
-    @Test
-    void testWithdraw_Invalid_InsufficientBalance() {
-        wallet.setBalance(new BigDecimal("50.00"));
-        when(walletRepository.findByUserId(userId)).thenReturn(Optional.of(wallet));
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> walletService.withdraw(userId, new BigDecimal("100.00"))
-        );
-
-        assertEquals("Insufficient balance", exception.getMessage());
+        assertThrows(IllegalArgumentException.class,
+                () -> walletService.decreaseBalance(walletId, new BigDecimal("100")));
     }
 }
