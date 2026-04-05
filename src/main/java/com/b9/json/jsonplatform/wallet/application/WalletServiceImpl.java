@@ -42,5 +42,13 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public void decreaseBalance(UUID walletId, BigDecimal amount) {
+        Wallet wallet = getWalletById(walletId);
+
+        if (wallet.getBalance().compareTo(amount) < 0) {
+            throw new IllegalArgumentException("Insufficient balance");
+        }
+
+        wallet.setBalance(wallet.getBalance().subtract(amount));
+        walletRepository.save(wallet);
     }
 }
