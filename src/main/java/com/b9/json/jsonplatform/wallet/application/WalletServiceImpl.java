@@ -3,7 +3,6 @@ package com.b9.json.jsonplatform.wallet.application;
 import com.b9.json.jsonplatform.wallet.domain.Wallet;
 import com.b9.json.jsonplatform.wallet.domain.WalletRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -23,42 +22,22 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    public Wallet getWalletById(UUID walletId) {
+        return walletRepository.findById(walletId)
+                .orElseThrow(() -> new IllegalArgumentException("Wallet not found"));
+    }
+
+    @Override
     public Wallet getWalletByUserId(UUID userId) {
         return walletRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Wallet not found"));
     }
 
     @Override
-    @Transactional
-    public Wallet topUp(UUID userId, BigDecimal amount) {
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Amount must be greater than zero");
-        }
-
-        Wallet wallet = getWalletByUserId(userId);
-
-        BigDecimal newBalance = wallet.getBalance().add(amount);
-        wallet.setBalance(newBalance);
-
-        return walletRepository.save(wallet);
+    public void increaseBalance(UUID walletId, BigDecimal amount) {
     }
 
     @Override
-    @Transactional
-    public Wallet withdraw(UUID userId, BigDecimal amount) {
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Amount must be greater than zero");
-        }
-
-        Wallet wallet = getWalletByUserId(userId);
-
-        if (wallet.getBalance().compareTo(amount) < 0) {
-            throw new IllegalArgumentException("Insufficient balance");
-        }
-
-        BigDecimal newBalance = wallet.getBalance().subtract(amount);
-        wallet.setBalance(newBalance);
-
-        return walletRepository.save(wallet);
+    public void decreaseBalance(UUID walletId, BigDecimal amount) {
     }
 }
