@@ -1,13 +1,13 @@
-package com.b9.json.jsonplatform.wallet.application;
+package com.b9.json.jsonplatform.transaction.application;
 
-import com.b9.json.jsonplatform.wallet.application.handler.PaymentHandler;
-import com.b9.json.jsonplatform.wallet.application.handler.RefundHandler;
-import com.b9.json.jsonplatform.wallet.application.handler.TopUpHandler;
-import com.b9.json.jsonplatform.wallet.application.handler.WithdrawalHandler;
-import com.b9.json.jsonplatform.wallet.domain.Transaction;
-import com.b9.json.jsonplatform.wallet.domain.TransactionStatus;
-import com.b9.json.jsonplatform.wallet.domain.TransactionType;
-import com.b9.json.jsonplatform.wallet.domain.TransactionRepository;
+import com.b9.json.jsonplatform.transaction.application.handler.PaymentHandler;
+import com.b9.json.jsonplatform.transaction.application.handler.RefundHandler;
+import com.b9.json.jsonplatform.transaction.application.handler.TopUpHandler;
+import com.b9.json.jsonplatform.transaction.application.handler.WithdrawalHandler;
+import com.b9.json.jsonplatform.transaction.domain.Transaction;
+import com.b9.json.jsonplatform.transaction.domain.TransactionStatus;
+import com.b9.json.jsonplatform.transaction.domain.TransactionType;
+import com.b9.json.jsonplatform.transaction.domain.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

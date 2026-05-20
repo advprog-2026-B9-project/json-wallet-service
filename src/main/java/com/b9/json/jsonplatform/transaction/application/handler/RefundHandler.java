@@ -1,8 +1,8 @@
-package com.b9.json.jsonplatform.wallet.application.handler;
+package com.b9.json.jsonplatform.transaction.application.handler;
 
 import com.b9.json.jsonplatform.wallet.application.WalletService;
-import com.b9.json.jsonplatform.wallet.domain.Transaction;
-import com.b9.json.jsonplatform.wallet.domain.TransactionType;
+import com.b9.json.jsonplatform.transaction.domain.Transaction;
+import com.b9.json.jsonplatform.transaction.domain.TransactionType;
 import org.springframework.stereotype.Component;
 
 @Component

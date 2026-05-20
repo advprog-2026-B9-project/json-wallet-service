@@ -1,8 +1,8 @@
-package com.b9.json.jsonplatform.wallet.infrastructure;
+package com.b9.json.jsonplatform.transaction.infrastructure;
 
-import com.b9.json.jsonplatform.wallet.application.TransactionService;
-import com.b9.json.jsonplatform.wallet.domain.Transaction;
-import com.b9.json.jsonplatform.wallet.domain.TransactionType;
+import com.b9.json.jsonplatform.transaction.application.TransactionService;
+import com.b9.json.jsonplatform.transaction.domain.Transaction;
+import com.b9.json.jsonplatform.transaction.domain.TransactionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;

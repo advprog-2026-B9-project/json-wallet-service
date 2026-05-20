@@ -1,9 +1,9 @@
-package com.b9.json.jsonplatform.wallet.infrastructure;
+package com.b9.json.jsonplatform.transaction.infrastructure;
 
-import com.b9.json.jsonplatform.wallet.application.TransactionService;
-import com.b9.json.jsonplatform.wallet.domain.Transaction;
-import com.b9.json.jsonplatform.wallet.domain.TransactionStatus;
-import com.b9.json.jsonplatform.wallet.domain.TransactionType;
+import com.b9.json.jsonplatform.transaction.application.TransactionService;
+import com.b9.json.jsonplatform.transaction.domain.Transaction;
+import com.b9.json.jsonplatform.transaction.domain.TransactionStatus;
+import com.b9.json.jsonplatform.transaction.domain.TransactionType;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

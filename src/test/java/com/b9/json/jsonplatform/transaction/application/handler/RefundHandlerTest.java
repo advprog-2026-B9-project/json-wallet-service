@@ -1,8 +1,8 @@
-package com.b9.json.jsonplatform.wallet.application.handler;
+package com.b9.json.jsonplatform.transaction.application.handler;
 
 import com.b9.json.jsonplatform.wallet.application.WalletService;
-import com.b9.json.jsonplatform.wallet.domain.Transaction;
-import com.b9.json.jsonplatform.wallet.domain.TransactionType;
+import com.b9.json.jsonplatform.transaction.domain.Transaction;
+import com.b9.json.jsonplatform.transaction.domain.TransactionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,13 +21,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class PaymentHandlerTest {
+class RefundHandlerTest {
 
     @Mock
     private WalletService walletService;
 
     @InjectMocks
-    private PaymentHandler handler;
+    private RefundHandler handler;
 
     private UUID walletId;
     private UUID targetWalletId;
@@ -39,38 +39,38 @@ class PaymentHandlerTest {
     }
 
     @Test
-    void supportedType_returnsPayment() {
-        assertEquals(TransactionType.PAYMENT, handler.supportedType());
+    void supportedType_returnsRefund() {
+        assertEquals(TransactionType.REFUND, handler.supportedType());
     }
 
     @Test
-    void execute_decreasesSourceAndIncreasesTarget() {
+    void execute_increasesSourceAndDecreasesTarget() {
         Transaction transaction = new Transaction(
                 walletId,
                 targetWalletId,
-                TransactionType.PAYMENT,
-                new BigDecimal("75"),
-                "Payment"
+                TransactionType.REFUND,
+                new BigDecimal("30"),
+                "Refund"
         );
 
         handler.execute(transaction);
 
-        verify(walletService, times(1)).decreaseBalance(walletId, new BigDecimal("75"));
-        verify(walletService, times(1)).increaseBalance(targetWalletId, new BigDecimal("75"));
+        verify(walletService, times(1)).increaseBalance(walletId, new BigDecimal("30"));
+        verify(walletService, times(1)).decreaseBalance(targetWalletId, new BigDecimal("30"));
     }
 
     @Test
     void execute_withNullTargetWalletId_throwsIllegalStateException() {
         Transaction transaction = new Transaction(
                 walletId,
-                TransactionType.PAYMENT,
+                TransactionType.REFUND,
                 new BigDecimal("25"),
-                "Payment"
+                "Refund"
         );
 
         assertThrows(IllegalStateException.class, () -> handler.execute(transaction));
 
-        verify(walletService, never()).decreaseBalance(any(), any());
         verify(walletService, never()).increaseBalance(any(), any());
+        verify(walletService, never()).decreaseBalance(any(), any());
     }
 }

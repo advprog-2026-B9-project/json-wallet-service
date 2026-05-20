@@ -1,4 +1,4 @@
-package com.b9.json.jsonplatform.wallet.domain;
+package com.b9.json.jsonplatform.transaction.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

@@ -1,8 +1,8 @@
-package com.b9.json.jsonplatform.wallet.application.handler;
+package com.b9.json.jsonplatform.transaction.application.handler;
 
 import com.b9.json.jsonplatform.wallet.application.WalletService;
-import com.b9.json.jsonplatform.wallet.domain.Transaction;
-import com.b9.json.jsonplatform.wallet.domain.TransactionType;
+import com.b9.json.jsonplatform.transaction.domain.Transaction;
+import com.b9.json.jsonplatform.transaction.domain.TransactionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,13 +18,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class TopUpHandlerTest {
+class WithdrawalHandlerTest {
 
     @Mock
     private WalletService walletService;
 
     @InjectMocks
-    private TopUpHandler handler;
+    private WithdrawalHandler handler;
 
     private UUID walletId;
     private Transaction transaction;
@@ -34,21 +34,21 @@ class TopUpHandlerTest {
         walletId = UUID.randomUUID();
         transaction = new Transaction(
                 walletId,
-                TransactionType.TOP_UP,
-                new BigDecimal("100"),
-                "Top Up"
+                TransactionType.WITHDRAWAL,
+                new BigDecimal("50"),
+                "Withdrawal"
         );
     }
 
     @Test
-    void supportedType_returnsTopUp() {
-        assertEquals(TransactionType.TOP_UP, handler.supportedType());
+    void supportedType_returnsWithdrawal() {
+        assertEquals(TransactionType.WITHDRAWAL, handler.supportedType());
     }
 
     @Test
-    void execute_callsIncreaseBalanceOnSourceWallet() {
+    void execute_callsDecreaseBalanceOnSourceWallet() {
         handler.execute(transaction);
 
-        verify(walletService, times(1)).increaseBalance(walletId, new BigDecimal("100"));
+        verify(walletService, times(1)).decreaseBalance(walletId, new BigDecimal("50"));
     }
 }

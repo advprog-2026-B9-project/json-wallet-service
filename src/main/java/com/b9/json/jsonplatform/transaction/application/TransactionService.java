@@ -1,7 +1,7 @@
-package com.b9.json.jsonplatform.wallet.application;
+package com.b9.json.jsonplatform.transaction.application;
 
-import com.b9.json.jsonplatform.wallet.domain.Transaction;
-import com.b9.json.jsonplatform.wallet.domain.TransactionType;
+import com.b9.json.jsonplatform.transaction.domain.Transaction;
+import com.b9.json.jsonplatform.transaction.domain.TransactionType;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;

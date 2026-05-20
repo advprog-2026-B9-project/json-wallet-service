@@ -1,4 +1,4 @@
-package com.b9.json.jsonplatform.wallet.domain;
+package com.b9.json.jsonplatform.transaction.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
