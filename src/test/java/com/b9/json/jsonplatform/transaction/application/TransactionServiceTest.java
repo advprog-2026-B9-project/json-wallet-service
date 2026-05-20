@@ -8,6 +8,7 @@ import com.b9.json.jsonplatform.transaction.domain.Transaction;
 import com.b9.json.jsonplatform.transaction.domain.TransactionStatus;
 import com.b9.json.jsonplatform.transaction.domain.TransactionType;
 import com.b9.json.jsonplatform.transaction.domain.TransactionRepository;
+import com.b9.json.jsonplatform.wallet.application.WalletService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
