@@ -69,7 +69,7 @@ class TransactionControllerTest {
                 .andExpect(jsonPath("$.amount").value(100));
 
         verify(transactionService).createTransaction(
-                eq(walletId), eq(TransactionType.TOP_UP), eq(new BigDecimal("100")), eq("Top Up"));
+                walletId, TransactionType.TOP_UP, new BigDecimal("100"), "Top Up");
     }
 
     @Test
