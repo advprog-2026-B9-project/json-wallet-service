@@ -18,8 +18,8 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/api/v1/wallets/**").permitAll()
-                        .requestMatchers("/api/v1/api/v1/transactions/**").permitAll()
+                        .requestMatchers("/api/v1/wallets/**").permitAll()
+                        .requestMatchers("/api/v1/transactions/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 );
