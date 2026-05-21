@@ -47,6 +47,7 @@ sonar {
     properties {
         property "sonar.projectKey", "advprog-2026-B9-project_json-wallet-service"
         property "sonar.organization", "advprog-2026-b9-project"
+        property "sonar.coverage.exclusions", "**/config/**,**/WalletTransactionApplication.java"
     }
 }
 
@@ -62,13 +63,6 @@ jacoco {
 sourceSets {
     test {
         java {
-            // TODO: remove these once owners fix the pre-existing failures on feat/wallet-transaction.
-            //   - UserTest: setId(1L) but User.id is now UUID
-            //   - AuthControllerTest: mocks UserRepository but AuthController depends on AuthService
-            //   - OrderControllerTest: context bootstrap failure (see TEST-...OrderControllerTest.xml)
-            exclude '**/auth/domain/UserTest.java'
-            exclude '**/auth/infrastructure/controller/AuthControllerTest.java'
-            exclude '**/order/infrastructure/controller/OrderControllerTest.java'
         }
     }
 }
@@ -84,8 +78,15 @@ jacocoTestReport {
         xml.required = true
         html.required = true
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/config/**',
+                    '**/WalletTransactionApplication.class'
+            ])
+        }))
+    }
 }
-
 jacocoTestCoverageVerification {
     violationRules {
         rule {
@@ -108,6 +109,13 @@ jacocoTestCoverageVerification {
             }
         }
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/config/**',
+                    '**/WalletTransactionApplication.class'
+            ])
+        }))
+    }
 }
-
 check.dependsOn jacocoTestCoverageVerification
