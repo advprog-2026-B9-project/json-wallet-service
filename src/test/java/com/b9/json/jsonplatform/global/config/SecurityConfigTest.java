@@ -18,10 +18,6 @@ class SecurityConfigTest {
     @Test
     void securityFilterChain_buildsSuccessfully() throws Exception {
         HttpSecurity http = mock(HttpSecurity.class);
-        CorsConfigurer<HttpSecurity> cors = mock(CorsConfigurer.class);
-        CsrfConfigurer<HttpSecurity> csrf = mock(CsrfConfigurer.class);
-        AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authz =
-                mock(AuthorizeHttpRequestsConfigurer.AuthorizationManagerRequestMatcherRegistry.class);
         DefaultSecurityFilterChain chain = mock(DefaultSecurityFilterChain.class);
 
         when(http.cors(any())).thenReturn(http);

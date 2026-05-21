@@ -79,11 +79,12 @@ class WalletServiceTest {
     @Test
     void testDecreaseBalance_Insufficient() {
         wallet.setBalance(new BigDecimal("50"));
+        BigDecimal tooMuch = new BigDecimal("100");
 
         when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
 
         assertThrows(IllegalArgumentException.class,
-                () -> walletService.decreaseBalance(walletId, new BigDecimal("100")));
+                () -> walletService.decreaseBalance(walletId, tooMuch));
     }
 
     @Test
@@ -121,20 +122,22 @@ class WalletServiceTest {
 
     @Test
     void testIncreaseBalance_WalletNotFound() {
+        BigDecimal amount = new BigDecimal("10");
         when(walletRepository.findById(walletId)).thenReturn(Optional.empty());
 
         assertThrows(IllegalArgumentException.class,
-                () -> walletService.increaseBalance(walletId, new BigDecimal("10")));
+                () -> walletService.increaseBalance(walletId, amount));
 
         verify(walletRepository, never()).save(any());
     }
 
     @Test
     void testDecreaseBalance_WalletNotFound() {
+        BigDecimal amount = new BigDecimal("10");
         when(walletRepository.findById(walletId)).thenReturn(Optional.empty());
 
         assertThrows(IllegalArgumentException.class,
-                () -> walletService.decreaseBalance(walletId, new BigDecimal("10")));
+                () -> walletService.decreaseBalance(walletId, amount));
 
         verify(walletRepository, never()).save(any());
     }
@@ -153,10 +156,11 @@ class WalletServiceTest {
     @Test
     void testDecreaseBalance_OneCentOverBalance_throwsInsufficient() {
         wallet.setBalance(new BigDecimal("100.00"));
+        BigDecimal overAmount = new BigDecimal("100.01");
         when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
 
         assertThrows(IllegalArgumentException.class,
-                () -> walletService.decreaseBalance(walletId, new BigDecimal("100.01")));
+                () -> walletService.decreaseBalance(walletId, overAmount));
 
         verify(walletRepository, never()).save(any());
     }
