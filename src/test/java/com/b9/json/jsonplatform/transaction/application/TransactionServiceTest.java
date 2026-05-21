@@ -98,11 +98,12 @@ class TransactionServiceTest {
 
     @Test
     void testCreateTransaction_InvalidAmount_Negative() {
+        BigDecimal negativeAmount = new BigDecimal("-50");
         assertThrows(IllegalArgumentException.class,
                 () -> transactionService.createTransaction(
                         walletId,
                         TransactionType.WITHDRAWAL,
-                        new BigDecimal("-50"),
+                        negativeAmount,
                         "Withdrawal"
                 ));
 
