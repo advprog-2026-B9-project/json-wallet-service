@@ -51,7 +51,7 @@ class WalletControllerTest {
     void testCreateWallet_returnsCreatedWallet() throws Exception {
         when(walletService.createWallet(any(UUID.class))).thenReturn(wallet);
 
-        mockMvc.perform(post("/wallets/users/{id}", userId))
+        mockMvc.perform(post("/api/v1/wallets/users/{id}", userId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(walletId.toString()))
                 .andExpect(jsonPath("$.userId").value(userId.toString()))
@@ -64,7 +64,7 @@ class WalletControllerTest {
     void testGetWalletById_found_returnsWallet() throws Exception {
         when(walletService.getWalletById(walletId)).thenReturn(wallet);
 
-        mockMvc.perform(get("/wallets/{walletId}", walletId))
+        mockMvc.perform(get("/api/v1/wallets/{walletId}", walletId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(walletId.toString()))
                 .andExpect(jsonPath("$.balance").value(250.00));
@@ -76,7 +76,7 @@ class WalletControllerTest {
                 .thenThrow(new IllegalArgumentException("Wallet not found"));
 
         ServletException ex = assertThrows(ServletException.class,
-                () -> mockMvc.perform(get("/wallets/{walletId}", walletId)));
+                () -> mockMvc.perform(get("/api/v1/wallets/{walletId}", walletId)));
         assertEquals(IllegalArgumentException.class, ex.getCause().getClass());
     }
 
@@ -84,7 +84,7 @@ class WalletControllerTest {
     void testGetWalletByUserId_found_returnsWallet() throws Exception {
         when(walletService.getWalletByUserId(userId)).thenReturn(wallet);
 
-        mockMvc.perform(get("/wallets/users/{id}", userId))
+        mockMvc.perform(get("/api/v1/wallets/users/{id}", userId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value(userId.toString()));
     }
@@ -95,7 +95,7 @@ class WalletControllerTest {
                 .thenThrow(new IllegalArgumentException("Wallet not found"));
 
         ServletException ex = assertThrows(ServletException.class,
-                () -> mockMvc.perform(get("/wallets/users/{id}", userId)));
+                () -> mockMvc.perform(get("/api/v1/wallets/users/{id}", userId)));
         assertEquals(IllegalArgumentException.class, ex.getCause().getClass());
     }
 }
