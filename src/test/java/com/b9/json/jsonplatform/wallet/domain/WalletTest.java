@@ -66,4 +66,11 @@ class WalletTest {
         Wallet wallet = new Wallet(UUID.randomUUID());
         assertNotNull(wallet.getBalance());
     }
+    @Test
+    void testNoArgConstructor_createsInstance() throws Exception {
+        var constructor = Wallet.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Wallet wallet = constructor.newInstance();
+        assertNotNull(wallet);
+    }
 }
