@@ -59,7 +59,7 @@ class TransactionControllerTest {
         when(transactionService.createTransaction(any(), any(), any(), any()))
                 .thenReturn(transaction);
 
-        mockMvc.perform(post("/transactions")
+        mockMvc.perform(post("/api/v1/transactions")
                         .param("walletId", walletId.toString())
                         .param("type", "TOP_UP")
                         .param("amount", "100")
@@ -74,7 +74,7 @@ class TransactionControllerTest {
 
     @Test
     void testCreateTransaction_missingAmount_returns400() throws Exception {
-        mockMvc.perform(post("/transactions")
+        mockMvc.perform(post("/api/v1/transactions")
                         .param("walletId", walletId.toString())
                         .param("type", "TOP_UP"))
                 .andExpect(status().isBadRequest());
@@ -84,7 +84,7 @@ class TransactionControllerTest {
     void testCreateTopUp_returnsTransaction() throws Exception {
         when(transactionService.createTopUp(eq(walletId), any())).thenReturn(transaction);
 
-        mockMvc.perform(post("/transactions/topup")
+        mockMvc.perform(post("/api/v1/transactions/topup")
                         .param("walletId", walletId.toString())
                         .param("amount", "100"))
                 .andExpect(status().isOk())
@@ -97,7 +97,7 @@ class TransactionControllerTest {
                 walletId, TransactionType.WITHDRAWAL, new BigDecimal("50"), "Withdrawal");
         when(transactionService.createWithdrawal(eq(walletId), any())).thenReturn(withdrawal);
 
-        mockMvc.perform(post("/transactions/withdrawal")
+        mockMvc.perform(post("/api/v1/transactions/withdrawal")
                         .param("walletId", walletId.toString())
                         .param("amount", "50"))
                 .andExpect(status().isOk())
@@ -111,7 +111,7 @@ class TransactionControllerTest {
         when(transactionService.createPayment(eq(walletId), eq(targetWalletId), any()))
                 .thenReturn(payment);
 
-        mockMvc.perform(post("/transactions/payment")
+        mockMvc.perform(post("/api/v1/transactions/payment")
                         .param("walletId", walletId.toString())
                         .param("targetWalletId", targetWalletId.toString())
                         .param("amount", "75"))
@@ -122,7 +122,7 @@ class TransactionControllerTest {
 
     @Test
     void testCreatePayment_missingTargetWalletId_returns400() throws Exception {
-        mockMvc.perform(post("/transactions/payment")
+        mockMvc.perform(post("/api/v1/transactions/payment")
                         .param("walletId", walletId.toString())
                         .param("amount", "75"))
                 .andExpect(status().isBadRequest());
@@ -135,7 +135,7 @@ class TransactionControllerTest {
         when(transactionService.createRefund(eq(walletId), eq(targetWalletId), any()))
                 .thenReturn(refund);
 
-        mockMvc.perform(post("/transactions/refund")
+        mockMvc.perform(post("/api/v1/transactions/refund")
                         .param("walletId", walletId.toString())
                         .param("targetWalletId", targetWalletId.toString())
                         .param("amount", "30"))
@@ -148,7 +148,7 @@ class TransactionControllerTest {
         transaction.setStatus(TransactionStatus.SUCCESS);
         when(transactionService.markSuccess(transactionId)).thenReturn(transaction);
 
-        mockMvc.perform(post("/transactions/{transactionId}/success", transactionId))
+        mockMvc.perform(post("/api/v1/transactions/{transactionId}/success", transactionId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("SUCCESS"));
     }
@@ -159,7 +159,7 @@ class TransactionControllerTest {
                 .thenThrow(new IllegalArgumentException("Transaction not found"));
 
         ServletException ex = assertThrows(ServletException.class,
-                () -> mockMvc.perform(post("/transactions/{transactionId}/success", transactionId)));
+                () -> mockMvc.perform(post("/api/v1/transactions/{transactionId}/success", transactionId)));
         assertEquals(IllegalArgumentException.class, ex.getCause().getClass());
     }
 
@@ -168,7 +168,7 @@ class TransactionControllerTest {
         transaction.setStatus(TransactionStatus.FAILED);
         when(transactionService.markFailed(transactionId)).thenReturn(transaction);
 
-        mockMvc.perform(post("/transactions/{transactionId}/failed", transactionId))
+        mockMvc.perform(post("/api/v1/transactions/{transactionId}/failed", transactionId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("FAILED"));
     }
@@ -179,7 +179,7 @@ class TransactionControllerTest {
                 .thenThrow(new IllegalArgumentException("Transaction not found"));
 
         ServletException ex = assertThrows(ServletException.class,
-                () -> mockMvc.perform(post("/transactions/{transactionId}/failed", transactionId)));
+                () -> mockMvc.perform(post("/api/v1/transactions/{transactionId}/failed", transactionId)));
         assertEquals(IllegalArgumentException.class, ex.getCause().getClass());
     }
 
@@ -190,7 +190,7 @@ class TransactionControllerTest {
         when(transactionService.getWalletTransactions(walletId))
                 .thenReturn(List.of(transaction, tx2));
 
-        mockMvc.perform(get("/transactions/wallets/{walletId}", walletId))
+        mockMvc.perform(get("/api/v1/transactions/wallets/{walletId}", walletId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].type").value("TOP_UP"))
@@ -201,7 +201,7 @@ class TransactionControllerTest {
     void testGetWalletTransactions_empty_returnsEmptyArray() throws Exception {
         when(transactionService.getWalletTransactions(walletId)).thenReturn(List.of());
 
-        mockMvc.perform(get("/transactions/wallets/{walletId}", walletId))
+        mockMvc.perform(get("/api/v1/transactions/wallets/{walletId}", walletId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
     }
