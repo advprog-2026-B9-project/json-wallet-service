@@ -1,8 +1,9 @@
 global:
-  scrape_interval: 5s
+  scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'wallet-service'
+  - job_name: 'wallet-service-render'
+    scheme: https
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['host.docker.internal:8082']
+      - targets: ['json-wallet-service.onrender.com']
