@@ -21,6 +21,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/wallets/**").permitAll()
                         .requestMatchers("/api/v1/transactions/**").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
